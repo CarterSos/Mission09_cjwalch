@@ -28,20 +28,24 @@ namespace Mission09_cjwalch.Controllers
         {
             repo = temp;
         }
-        public IActionResult Index(int pageNum = 1) // if nothing comes in then default to 1
+        public IActionResult Index(string category, int pageNum = 1) // if nothing comes in then default to 1
         {
             int pageSize = 10;
 
             var x = new BooksViewModel
             {
                 Books = repo.Books
+                .Where(c => c.Category == category || category == null)
                 .OrderBy(b => b.Title)
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize),
 
                 PageInfo = new PageInfo
                 {
-                    TotalNumBooks = repo.Books.Count(),
+                    TotalNumBooks = 
+                        (category == null 
+                            ?  repo.Books.Count()
+                            :  repo.Books.Where(x => x.Category == category).Count()),
                     BooksPerPage = pageSize,
                     CurrentPage = pageNum
                 }

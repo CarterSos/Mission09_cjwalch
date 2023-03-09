@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/css/bootstrap-grid.min.css" rel="stylesheet" />
+
 </head>
 <body>
     <div class="bg-dark text-white p-2">
@@ -12,7 +15,7 @@
     </div>
     <div class="row m-1 p-1">
         <div id="categories" class="col-3">
-            Here's a ton of cool books! If only I knew how to read...
+            <vc:category></vc:category>
         </div>
         <div class="col-9">
             @RenderBody()
