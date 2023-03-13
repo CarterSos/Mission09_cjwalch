@@ -13,28 +13,32 @@ namespace Mission09_cjwalch.Pages
     {
         private IBookstoreRepository repo { get; set; }
 
-        public CartModel(IBookstoreRepository temp)
+        public CartModel(IBookstoreRepository temp, Basket b)
         {
             repo = temp; // instance of database to pull up data cause we don't use controller for this
+            basket = b;
         }
 
         public Basket basket { get; set; }
-
         public string ReturnUrl { get; set; }
 
         public void OnGet(string returnUrl)
         {
             ReturnUrl = returnUrl ?? "/";
-            basket = HttpContext.Session.GetJson<Basket>("basket") ?? new Basket();
         }
+
         public IActionResult OnPost(int bookid, string returnUrl) // probably need to pass in quantity and other things and change the AddItem function in basket.cs
         {
             Book b = repo.Books.FirstOrDefault(x => x.BookId == bookid);
 
-            basket = HttpContext.Session.GetJson<Basket>("basket") ?? new Basket();
             basket.AddItem(b, 1);
 
-            HttpContext.Session.SetJson("basket", basket);
+            return RedirectToPage(new { ReturnUrl = returnUrl });
+        }
+
+        public IActionResult OnPostRemove(int bookId, string returnUrl)
+        {
+            basket.RemoveItem(basket.Items.First(x => x.Book.BookId == bookId).Book);
 
             return RedirectToPage(new { ReturnUrl = returnUrl });
         }
